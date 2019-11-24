@@ -87,4 +87,32 @@ public class Item {
     public String toString() {
         return String.format("%d, %s, %s, %b", id, description, created.getTime(), done);
     }
+
+    /**
+     * @param o объект для сравнения.
+     * @return true or false.
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (o == this) {
+            return true;
+        }
+        if (o == null || !(o instanceof Item)) {
+            return false;
+        }
+        Item item = (Item) o;
+        return id == item.id && description.equals(item.description) && done == item.done;
+    }
+
+    /**
+     * @return хэш-код объекта.
+     */
+    @Override
+    public int hashCode() {
+        int hash = 1;
+        hash = 31 * hash + id;
+        hash = 31 * hash + description.hashCode();
+        hash = 31 * hash + (done ? 1231 : 1237);
+        return hash;
+    }
 }
