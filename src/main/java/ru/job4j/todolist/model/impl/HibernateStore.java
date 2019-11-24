@@ -1,13 +1,12 @@
 package ru.job4j.todolist.model.impl;
 
-import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.query.Query;
 import ru.job4j.todolist.entity.Item;
 import ru.job4j.todolist.model.Store;
-import java.util.Comparator;
+import ru.job4j.todolist.model.Wrapper;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author Vitaly Vasilyev, date: 09.11.2019, e-mail: rav.energ@rambler.ru
@@ -42,15 +41,9 @@ public class HibernateStore implements Store<Item> {
      */
     @Override
     public void add(final String description) {
-        try (final Session session = factory.openSession()) {
-            session.beginTransaction();
-
-            final Item item = new Item();
-            item.setDescription(description);
-
-            session.save(item);
-            session.getTransaction().commit();
-        }
+        final Item item = new Item();
+        item.setDescription(description);
+        new Wrapper(factory).perform(session -> session.save(item));
     }
 
     /**
@@ -58,7 +51,7 @@ public class HibernateStore implements Store<Item> {
      */
     @Override
     public List<Item> findAll() {
-        return new ItemEnricher().enrich(factory);
+        return new Wrapper(factory).perform(session -> session.createQuery("from Item i ORDER BY i.id").list());
     }
 
     /**
@@ -66,8 +59,7 @@ public class HibernateStore implements Store<Item> {
      */
     @Override
     public List<Item> findNotPerformed() {
-        final List<Item> items = new ItemEnricher().enrich(factory);
-        return items.stream().filter(e -> !e.isDone()).collect(Collectors.toList());
+        return new Wrapper(factory).perform(session -> session.createQuery("from Item i WHERE done != true ORDER BY i.id").list());
     }
 
     /**
@@ -75,8 +67,11 @@ public class HibernateStore implements Store<Item> {
      */
     @Override
     public Item findTheLast() {
-        final List<Item> items = new ItemEnricher().enrich(factory);
-        return items.stream().max(Comparator.comparing(Item::getId)).orElse(null);
+        return new Wrapper(factory).perform(session -> {
+            final Query query = session.createQuery("from Item i ORDER BY i.id DESC");
+            query.setMaxResults(1);
+            return (Item) query.list().get(0);
+        });
     }
 
     /**
