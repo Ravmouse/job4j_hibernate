@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hibernate-mapping>
+    <class name="ru.job4j.h2mapping.t2carstorage.entity.Car" table="car">
+        <id name="id" column="id">
+            <generator class="identity"/>
+        </id>
+        <property name="name" column="name"/>
+        <many-to-one name="engine" class="ru.job4j.h2mapping.t2carstorage.entity.Engine" column="engine_id"/>
+        <set name="drivers" table="car_driver" lazy="true" fetch="select" cascade="save-update">
+            <key column="car_id" not-null="true"/>
+
+            <many-to-many class="ru.job4j.h2mapping.t2carstorage.entity.Driver" column="driver_id"/>
+        </set>
+    </class>
+</hibernate-mapping>

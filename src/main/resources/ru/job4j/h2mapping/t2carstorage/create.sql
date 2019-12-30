@@ -1,0 +1,27 @@
+﻿CREATE DATABASE car_storage;
+
+DROP TABLE IF EXISTS driver;
+CREATE TABLE driver (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR (255) NOT NULL
+);
+
+DROP TABLE IF EXISTS engine;
+CREATE TABLE engine (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR (255) NOT NULL
+);
+
+DROP TABLE IF EXISTS car;
+CREATE TABLE car (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR (255) NOT NULL,
+    engine_id int REFERENCES engine(id) DEFAULT NULL
+);
+
+DROP TABLE IF EXISTS car_driver;
+CREATE TABLE car_driver (
+   id SERIAL PRIMARY KEY,
+   driver_id INT REFERENCES driver(id) NOT NULL,
+   car_id INT REFERENCES car(id) NOT NULL
+);
