@@ -2,7 +2,7 @@ package ru.job4j.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.log4j.Logger;
-import ru.job4j.todolist.entity.Item;
+import ru.job4j.h1config.t2todolist.entity.Item;
 import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
 import java.io.IOException;

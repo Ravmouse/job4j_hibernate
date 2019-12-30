@@ -11,18 +11,18 @@
 
     <servlet>
         <servlet-name>add</servlet-name>
-        <servlet-class>ru.job4j.todolist.controller.AddServlet</servlet-class>
+        <servlet-class>ru.job4j.h1config.t2todolist.controller.AddServlet</servlet-class>
     </servlet>
 
     <servlet>
         <servlet-name>all</servlet-name>
-        <servlet-class>ru.job4j.todolist.controller.LoadAllServlet</servlet-class>
+        <servlet-class>ru.job4j.h1config.t2todolist.controller.LoadAllServlet</servlet-class>
         <load-on-startup>0</load-on-startup>
     </servlet>
 
     <servlet>
         <servlet-name>not</servlet-name>
-        <servlet-class>ru.job4j.todolist.controller.LoadNotPerformedServlet</servlet-class>
+        <servlet-class>ru.job4j.h1config.t2todolist.controller.LoadNotPerformedServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>
