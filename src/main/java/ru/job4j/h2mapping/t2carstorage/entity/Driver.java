@@ -1,9 +1,7 @@
 package ru.job4j.h2mapping.t2carstorage.entity;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -13,8 +11,8 @@ import java.util.Optional;
 import java.util.Set;
 
 /**
- * @author Vitaly Vasilyev, date: 22.12.2019, e-mail: rav.energ@rambler.ru
- * @version 1.0
+ * @author Vitaly Vasilyev, date: 05.01.2020, e-mail: rav.energ@rambler.ru
+ * @version 1.1
  */
 @Entity(name = "driver")
 public class Driver {
@@ -25,9 +23,7 @@ public class Driver {
     @Column(name = "name")
     private String name;
 
-    @ManyToMany(fetch = FetchType.EAGER,
-                cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH},
-                mappedBy = "drivers")
+    @ManyToMany(mappedBy = "drivers")
     private Set<Car> cars = new HashSet<>();
 
     public Driver() {
@@ -72,6 +68,23 @@ public class Driver {
     @Override
     public String toString() {
         return String.format("Driver: id = %d, name = %s", id, name);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == this) {
+            return true;
+        }
+        if (!(o instanceof Driver)) {
+            return false;
+        }
+        Driver driver = (Driver) o;
+        return id != 0 && id == driver.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return 33;
     }
 
     public static Builder newBuilder() {

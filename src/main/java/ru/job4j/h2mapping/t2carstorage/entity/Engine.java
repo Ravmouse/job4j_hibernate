@@ -1,9 +1,7 @@
 package ru.job4j.h2mapping.t2carstorage.entity;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -13,8 +11,8 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * @author Vitaly Vasilyev, date: 22.12.2019, e-mail: rav.energ@rambler.ru
- * @version 1.0
+ * @author Vitaly Vasilyev, date: 05.01.2020, e-mail: rav.energ@rambler.ru
+ * @version 1.1
  */
 @Entity(name = "engine")
 public class Engine {
@@ -25,9 +23,7 @@ public class Engine {
     @Column(name = "name")
     private String name;
 
-    @OneToMany(mappedBy = "engine",
-               cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH},
-               fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "engine")
     private List<Car> cars = new ArrayList<>();
 
     public Engine() {
@@ -62,11 +58,17 @@ public class Engine {
     }
 
     public void addCar(Car car) {
-        Optional.ofNullable(car).ifPresent(c -> cars.add(c));
+        Optional.ofNullable(car).ifPresent(c -> {
+            cars.add(c);
+            c.setEngine(this);
+        });
     }
 
     public void removeCar(Car car) {
-        Optional.ofNullable(car).ifPresent(c -> cars.remove(c));
+        Optional.ofNullable(car).ifPresent(c -> {
+            c.setEngine(null);
+            cars.remove(c);
+        });
     }
 
     @Override
