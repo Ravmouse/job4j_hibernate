@@ -33,6 +33,16 @@ public class Utils {
     }
 
     /**
+     * Находится файл-ресурс и от начала его пути удаляется строка "file:/".
+     * @param fileName имя файла-ресурса.
+     * @return путь до файла-ресурса.
+     */
+    public static String getResourcePath(final String fileName) {
+        final String temp = Utils.class.getClassLoader().getResource(fileName).toExternalForm();
+        return temp.substring(temp.indexOf("C"), temp.length());
+    }
+
+    /**
      * @param req запрос.
      * @return строка из запроса.
      */
@@ -47,11 +57,11 @@ public class Utils {
     }
 
     /**
-     * @param items лист задач.
+     * @param items лист элементов.
      * @return строка в виде json-объекта.
      * @throws IOException искл.
      */
-    public static String jsonFromList(List<Item> items) throws IOException {
+    public static <T> String jsonFromList(List<T> items) throws IOException {
         final ObjectMapper mapper = new ObjectMapper();
         mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
         return mapper.writeValueAsString(items);
@@ -66,5 +76,10 @@ public class Utils {
         final ObjectMapper mapper = new ObjectMapper();
         mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
         return mapper.writeValueAsString(item);
+    }
+
+    public static String parse(String key, String field) {
+        final String str = field.substring(field.indexOf(key) + key.length() + 3);
+        return str.substring(0, str.indexOf("\""));
     }
 }
