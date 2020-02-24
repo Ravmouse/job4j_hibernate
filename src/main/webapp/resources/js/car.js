@@ -44,17 +44,18 @@ $('#btnAnon').on('click', function () {
  * Также меняется цвет td таблицы там, где checkbox == checked.
  * Из лок.хранилища достается имя пользователя, а все офферы, непринадлежащие этому пользователям, становятся неактивными.
  */
-function getAllOffers() {
+function getOffers(url, flag, method, dataValue) {
     let name = localStorage.getItem("name");
     $.ajax({
-        url: './main',
-        method: 'GET',
+        url: url,
+        method: method,
         dataType: 'json',
+        data: dataValue,
         success: function (data) {
             $.each(data, function (k, v) {
                 let elem;
                 $('table tr:last').append(
-                    '<td>' +
+                    '<td class="myCell">' +
                     '<img src="resources/img/' + v.imgName + '">' + '<br>' +
                     '<label class="color_text">Марка:&nbsp;</label><label>' + v.car.brand.name + '</label><br>' +
                     '<label class="color_text">Модель:&nbsp;</label><label>' + v.car.model.name + '</label><br>' +
@@ -62,7 +63,8 @@ function getAllOffers() {
                     '<label class="color_text">Тип кузова:&nbsp;</label><label>' + v.car.carBody.name + '</label><br>' +
                     '<label class="color_text">Коробка передач:&nbsp;</label><label>' + v.car.transmission.name + '</label><br>' +
                     '<label class="color_text">Тип двигателя:&nbsp;</label><label>' + v.car.engine.name + '</label><br>' +
-                    '<label class="color_text">Продано:&nbsp;</label><input class="dynCheck" type="checkbox" id="ch' + k + '">' +
+                    '<label class="color_text">Продано:&nbsp;</label><input class="dynCheck" type="checkbox" id="ch' + k + '"><br>' +
+                    '<label class="color_text">Дата объявления:&nbsp;</label><label>' + v.createDate + '</label><br>' +
                     '</td>');
                 if (v.sold) {
                     elem = $('#ch' + k);
@@ -75,8 +77,45 @@ function getAllOffers() {
                 }
             });
         }
-    })
+    });
+    if (flag) {
+        $.ajax({
+            url: './fields',
+            method: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                let brand = $('#cmbxBrnd');
+                brand.empty();
+                brand.append('<option value=\"\" disabled selected>--Выберите марку--</option>');
+                $.each(data.brands, function (k, v) {
+                    $('#cmbxBrnd').append('<option value="' + (k + 1) + '">' + v + '</option>');
+                });
+            },
+        })
+    }
 }
+
+/**
+ * Клик по checkbox "Показать за последний день".
+ * По классу myCell очищаются все строки таблицы.
+ * Посылается ajax-запрос на сервлет, в котором получаются офферы только за последний день.
+ */
+$('#lstDay').on('change', function () {
+    $('.myCell').remove();
+    getOffers('./day', false, 'GET');
+});
+
+/**
+ * Выделенное в comboBox, затем - значение выделенного.
+ * По классу myCell очищаются все строки таблицы.
+ * Посылается ajax-запрос со значением выбранной машины в comboBox на сервлет, в котором получаются офферы.
+ */
+$('#cmbxBrnd').on('change', function () {
+    let optSelected = $('option:selected', this);
+    let valSelected = optSelected.val();
+    $('.myCell').remove();
+    getOffers('./brand', false, 'POST', JSON.stringify({brand : valSelected}));
+});
 
 /**
  * Переход со страницы main на страницу add.

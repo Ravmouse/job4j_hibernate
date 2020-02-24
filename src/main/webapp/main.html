@@ -20,14 +20,20 @@
                     <tr></tr>
                 </tbody>
             </table>
-            <input type="button" class="btn btn-outline-primary" value="Новое объявление" id="btn_next">
+            <input type="button" class="btn btn-outline-primary" value="Новое объявление" id="btn_next"><br><br>
+
+            <input type="checkbox" id="lstDay" autocomplete="off">
+            <label for="lstDay">Показать за последний день</label><br>
+
+            <label for="cmbxBrnd">Показать определенной марки</label>
+            <select class="form-control" id="cmbxBrnd"></select>
         </div>
     </body>
 
     <footer>
         <script src="resources/js/car.js"></script>
         <script>
-            $(document).ready(getAllOffers());
+            $(document).ready(getOffers('./main', true, 'GET'));
         </script>
     </footer>
 </html>

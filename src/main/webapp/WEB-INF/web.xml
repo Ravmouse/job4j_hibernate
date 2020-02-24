@@ -51,6 +51,16 @@
         <servlet-class>ru.job4j.h2mapping.t3carmarket.controller.LoginPassServlet</servlet-class>
     </servlet>
 
+    <servlet>
+        <servlet-name>day</servlet-name>
+        <servlet-class>ru.job4j.h2mapping.t3carmarket.controller.DayServlet</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>brand</servlet-name>
+        <servlet-class>ru.job4j.h2mapping.t3carmarket.controller.BrandServlet</servlet-class>
+    </servlet>
+
     <servlet-mapping>
         <servlet-name>add</servlet-name>
         <url-pattern>/add</url-pattern>
@@ -91,13 +101,14 @@
         <url-pattern>/log</url-pattern>
     </servlet-mapping>
 
-    <!--<filter>-->
-        <!--<filter-name>loginFilter</filter-name>-->
-        <!--<filter-class>ru.job4j.h2mapping.t3carmarket.filter.LoginFilter</filter-class>-->
-    <!--</filter>-->
-    <!--<filter-mapping>-->
-        <!--<filter-name>loginFilter</filter-name>-->
-        <!--<url-pattern>/*</url-pattern>-->
-    <!--</filter-mapping>-->
+    <servlet-mapping>
+        <servlet-name>day</servlet-name>
+        <url-pattern>/day</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>brand</servlet-name>
+        <url-pattern>/brand</url-pattern>
+    </servlet-mapping>
 
 </web-app>

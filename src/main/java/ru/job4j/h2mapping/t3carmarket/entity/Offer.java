@@ -1,5 +1,7 @@
 package ru.job4j.h2mapping.t3carmarket.entity;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import ru.job4j.utils.YearMonthDaySerializer;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -7,9 +9,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
+import java.time.LocalDate;
 
 /**
  * @author Vitaly Vasilyev, e-mail: rav.energ@rambler.ru
@@ -31,6 +33,10 @@ public class Offer {
     @ManyToOne
     @JoinColumn(name = "offeruser_id")
     private User user;
+
+    @JsonSerialize(using = YearMonthDaySerializer.class)
+    @Column(name = "create_date")
+    private LocalDate createDate;
 
     @Column
     private boolean sold;
@@ -77,6 +83,14 @@ public class Offer {
         this.user = user;
     }
 
+    public LocalDate getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(LocalDate createDate) {
+        this.createDate = createDate;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == this) {
@@ -96,6 +110,6 @@ public class Offer {
 
     @Override
     public String toString() {
-        return String.format("Offer: car=%s, image=%s, sold=%b, user=%s", car, imgName, sold, user);
+        return String.format("Offer: car=%s, image=%s, sold=%b, user=%s, createDate=%s", car, imgName, sold, user, createDate);
     }
 }

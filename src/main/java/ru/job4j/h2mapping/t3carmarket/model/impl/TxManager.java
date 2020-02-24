@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import ru.job4j.h1config.t2todolist.model.Wrapper;
+import ru.job4j.h2mapping.t3carmarket.entity.Brand;
 import ru.job4j.h2mapping.t3carmarket.entity.Offer;
 import ru.job4j.h2mapping.t3carmarket.entity.User;
 import ru.job4j.h2mapping.t3carmarket.model.TransactionManager;
@@ -85,6 +86,30 @@ public class TxManager implements TransactionManager<Offer> {
                 LOGGER.warn(e);
             }
             return user;
+        });
+    }
+
+    /**
+     * @return все объявления за последний день.
+     */
+    @Override
+    public List<Offer> selectOffersByDay() {
+        return new Wrapper(factory).perform(session ->
+                session.createQuery("from Offer o where extract(day from o.createDate) = extract(day from now()) order by o.id").list());
+    }
+
+    /**
+     * Создается экземпляр класса Brand из БД по id.
+     * Далее - запрос в БД на получение всех объявлений, в которых марки машин равны полученному экз.класса Brand.
+     * @param id порядковый номер.
+     * @return все объявления, в которых марки машин имеют передаваемый id.
+     */
+    @Override
+    public List<Offer> selectOffersByCar(int id) {
+        return new Wrapper(factory).perform(session -> {
+            final Brand brand = session.find(Brand.class, id);
+            return session.createQuery("from Offer o join fetch o.car c where c.brand = :brand")
+                        .setParameter("brand", brand).list();
         });
     }
 

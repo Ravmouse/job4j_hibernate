@@ -83,3 +83,5 @@ INSERT INTO offer_user VALUES (1, 'Administrator', 'password');
 INSERT INTO offer_user VALUES (2, 'Moderator', 'mod');
 ---------------------------------------------------
 ALTER TABLE offer ADD COLUMN offeruser_id INT REFERENCES offer_user(id) NOT NULL DEFAULT 1;
+---------------------------------------------------
+ALTER TABLE offer ADD COLUMN create_date TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT now();
