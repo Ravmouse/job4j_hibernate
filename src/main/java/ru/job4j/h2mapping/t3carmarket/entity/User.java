@@ -55,4 +55,21 @@ public class User {
     public String toString() {
         return String.format("User=%s, %s", name, password);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == this) {
+            return true;
+        }
+        if (!(o instanceof User)) {
+            return false;
+        }
+        User user = (User) o;
+        return id != 0 && id == user.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return 31;
+    }
 }

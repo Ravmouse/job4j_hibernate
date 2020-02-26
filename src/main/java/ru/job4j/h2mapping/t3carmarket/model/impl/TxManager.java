@@ -2,15 +2,17 @@ package ru.job4j.h2mapping.t3carmarket.model.impl;
 
 import org.apache.log4j.Logger;
 import org.hibernate.SessionFactory;
-import org.hibernate.cfg.Configuration;
+import org.hibernate.query.Query;
 import ru.job4j.h1config.t2todolist.model.Wrapper;
 import ru.job4j.h2mapping.t3carmarket.entity.Brand;
 import ru.job4j.h2mapping.t3carmarket.entity.Offer;
 import ru.job4j.h2mapping.t3carmarket.entity.User;
 import ru.job4j.h2mapping.t3carmarket.model.TransactionManager;
+import ru.job4j.h4integrationtest.t1test.HibernateFactory;
 import ru.job4j.utils.Utils;
 import javax.persistence.NoResultException;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Vitaly Vasilyev, e-mail: rav.energ@rambler.ru
@@ -24,9 +26,10 @@ public class TxManager implements TransactionManager<Offer> {
     /**
      * Фабрика сессий.
      */
-    private final SessionFactory factory = new Configuration()
-            .configure("ru/job4j/h2mapping/t3carmarket/carmarket.cfg.xml")
-            .buildSessionFactory();
+//    private final SessionFactory factory = new Configuration()
+//            .configure("ru/job4j/h2mapping/t3carmarket/carmarket.cfg.xml")
+//            .buildSessionFactory();
+    private final SessionFactory factory = HibernateFactory.getFactory();
     /**
      * Логгер.
      */
@@ -61,11 +64,26 @@ public class TxManager implements TransactionManager<Offer> {
     }
 
     /**
+     * @param offerId номер объявления.
+     * @return объявление.
+     */
+    @Override
+    public Offer findById(int offerId) {
+        return new Wrapper(factory).perform(session -> {
+            Offer offer = session.get(Offer.class, offerId);
+            return Optional.ofNullable(offer).orElse(new Offer());
+        });
+    }
+
+    /**
      * @return список всех объявлений.
      */
     @Override
     public List<Offer> selectAllOffers() {
-        return new Wrapper(factory).perform(session -> session.createQuery("from Offer o order by o.id").list());
+        return new Wrapper(factory).perform(session -> {
+            final Query query = session.createQuery("from Offer o order by o.id");
+            return (List<Offer>) query.list();
+        });
     }
 
     /**
